@@ -1,15 +1,44 @@
 {
   "loans": [
     {
-      "name": "PTZ+",
-      "principal": 10000,
+      "name": "PRET1",
+      "principal": 2500,
       "start_date": "2011-01-01",
       "series": [
-        {"start":   1, "end": 119, "amount": 85.48, "rate": 0.00 },
-        {"start": 120, "end": 120, "amount": 85.88, "rate": 0.00 }
+        {"start":   1, "end": 24, "amount": 10, "rate": 0.00 }
       ],
       "insurances": [
-        {"start": 1, "end": 120, "principal": 8600, "rate": 0.003 }
+        {"start": 1, "end": 24, "principal": 2500, "rate": 0.003 }
+      ]
+    },
+    {
+      "name": "PRET2",
+      "principal": 30000,
+      "start_date": "2011-01-01",
+      "series": [
+        { "start": 1, "end": 120, "amount": 297.18, "rate": 0.03}
+      ],
+      "insurances": [
+        { "start": 1, "end": 120, "principal": 30000, "rate": 0.003 }
+      ],
+      "strategies":[
+     
+      ]
+    },
+    {
+      "name": "PRET3",
+      "principal": 40000,
+      "start_date": "2011-01-01",
+      "series": [
+        { "start":   1, "end":  1, "amount": 200, "rate": 0.04 }
+        
+      ],
+      "insurances": [
+        { "start": 1, "end": 168, "principal": 40000, "rate": 0.004 }
+      ],
+      "strategies":[
+      	{ "name" : "split",  "split_after" : 1 },
+      	{ "name" : "smoothing", "target" : 500, "rate" : 0.040, "insurance_rate" : "0.004"}
       ]
     }
   ]
