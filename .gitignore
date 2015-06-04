@@ -1,0 +1,6 @@
+src/main/resources/data.json
+.classpath
+.project
+.settings
+bin
+target
