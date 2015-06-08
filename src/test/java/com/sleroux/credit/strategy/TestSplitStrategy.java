@@ -15,7 +15,7 @@ public class TestSplitStrategy {
 		Pret l = new Pret();
 		l.setNom("Test Split");
 		l.setNominal(new BigDecimal(1000));
-		l.setEcheances(1, 10, "0.2", "100");
+		l.addSerieEcheances(1, 10, "0.2", "100");
 		
 		l.addAssurance(1, 10, l.getNominal() + "", "0.0");
 
@@ -30,7 +30,7 @@ public class TestSplitStrategy {
 		l.printEcheances();
 		l.printAssurances();
 		
-		Assert.assertEquals(5, l.getDerniereEcheance().getFin());
+		Assert.assertEquals(5, l.getDerniereSerieEcheances().getFin());
 
 	}
 

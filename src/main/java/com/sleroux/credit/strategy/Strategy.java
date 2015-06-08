@@ -15,7 +15,5 @@ public abstract class Strategy {
 		// Empty
 	}
 
-	public abstract String getName();
-
 	public abstract void run(Pret _pret, List<Pret> _previousLoans) throws Exception;
 }

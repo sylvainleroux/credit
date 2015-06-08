@@ -7,17 +7,17 @@ import com.sleroux.credit.model.Pret;
 
 public class Lissage extends Strategy {
 
-	public int		mensualiteCible;
+	private int		mensualiteCible;
 
-	public String	taux;
+	private String	taux;
 
-	public String	tauxAssurance;
+	private String	tauxAssurance;
 
 	@Override
 	public void run(Pret _pret, List<Pret> _previousLoans) throws Exception {
-		
-		BigDecimal principal = _pret.getMensualites().get(_pret.getDerniereEcheance().getFin()).getCapitalRestantDu();
-		
+
+		BigDecimal principal = _pret.getMensualites().get(_pret.getDerniereSerieEcheances().getFin()).getCapitalRestantDu();
+
 		_pret.printEcheances();
 		_pret.createNewSeries(mensualiteCible, taux, tauxAssurance, principal, _previousLoans);
 		_pret.adjustLengthForTargetPayment(true);
@@ -26,29 +26,12 @@ public class Lissage extends Strategy {
 
 	}
 
-	@Override
-	public String getName() {
-		return "Lissage with mensualiteCible : " + mensualiteCible;
-	}
-
-	public int getMensualiteCible() {
-		return mensualiteCible;
-	}
-
 	public void setMensualiteCible(int _target) {
 		mensualiteCible = _target;
 	}
 
-	public String getTaux() {
-		return taux;
-	}
-
 	public void setTaux(String _rate) {
 		taux = _rate;
-	}
-
-	public String getTauxAssurance() {
-		return tauxAssurance;
 	}
 
 	public void setTauxAssurance(String _insuranceRate) {

@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.sleroux.credit.model.Pret;
-import com.sleroux.credit.model.Echeance;
+import com.sleroux.credit.model.SerieEcheances;
 
 public class Split extends Strategy {
 
@@ -15,9 +15,9 @@ public class Split extends Strategy {
 		// Split series
 		{
 			boolean delete = false;
-			Iterator<Echeance> i = _pret.getEcheances().iterator();
+			Iterator<SerieEcheances> i = _pret.getEcheances().iterator();
 			while (i.hasNext()) {
-				Echeance s = i.next();
+				SerieEcheances s = i.next();
 				if (delete) {
 					i.remove();
 				} else if (s.getFin() >= splitAfter) {
@@ -37,11 +37,6 @@ public class Split extends Strategy {
 
 	public void setSplitAfter(int _splitAfter) {
 		splitAfter = _splitAfter;
-	}
-
-	@Override
-	public String getName() {
-		return "Split";
 	}
 
 }

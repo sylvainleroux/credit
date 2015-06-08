@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.sleroux.credit.model.Echeance;
+import com.sleroux.credit.model.SerieEcheances;
 import com.sleroux.credit.model.Mensualite;
 import com.sleroux.credit.model.Pret;
 
@@ -15,7 +15,7 @@ public class CalcTools {
 		System.out.println("[Total] Mensualités");
 		LinkedHashMap<Integer, BigDecimal> mensualites = new LinkedHashMap<>();
 		for (Pret p : _prets) {
-			for (Echeance e : p.getEcheances()) {
+			for (SerieEcheances e : p.getEcheances()) {
 				for (int i = e.getDebut(); i <= e.getFin(); i++) {
 					if (mensualites.get(i) == null) {
 						mensualites.put(i, BigDecimal.ZERO);

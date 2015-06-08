@@ -6,7 +6,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.sleroux.credit.model.Echeance;
+import com.sleroux.credit.model.SerieEcheances;
 import com.sleroux.credit.model.Pret;
 
 public class TestLengthStrategy {
@@ -31,7 +31,7 @@ public class TestLengthStrategy {
 
 		BigDecimal interests = l.sommeInterets();
 		BigDecimal payed = BigDecimal.ZERO;
-		for (Echeance s : l.getEcheances()) {
+		for (SerieEcheances s : l.getEcheances()) {
 			payed = payed.add(s.getMontant().multiply(new BigDecimal(s.getFin() - s.getDebut() + 1)));
 		}
 
@@ -61,7 +61,7 @@ public class TestLengthStrategy {
 
 		BigDecimal interests = l.sommeInterets();
 		BigDecimal payed = BigDecimal.ZERO;
-		for (Echeance s : l.getEcheances()) {
+		for (SerieEcheances s : l.getEcheances()) {
 			payed = payed.add(s.getMontant().multiply(new BigDecimal(s.getFin() - s.getDebut() + 1)));
 		}
 		Assert.assertEquals(new BigDecimal(amount).add(interests), payed);
@@ -91,7 +91,7 @@ public class TestLengthStrategy {
 
 		BigDecimal interests = l.sommeInterets();
 		BigDecimal payed = BigDecimal.ZERO;
-		for (Echeance s : l.getEcheances()) {
+		for (SerieEcheances s : l.getEcheances()) {
 			payed = payed.add(s.getMontant().multiply(new BigDecimal(s.getFin() - s.getDebut() + 1)));
 		}
 		

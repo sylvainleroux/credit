@@ -2,8 +2,6 @@ package com.sleroux.credit.model;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,33 +19,18 @@ public class Pret {
 	private BigDecimal			taux;
 	private String				nom;
 
-	private List<Echeance>		echeance	= new ArrayList<>();
-	private List<Mensualite>	mensualite	= new ArrayList<>();
-	private List<Strategy>		strategies	= new ArrayList<>();
-	private List<Assurance>		assurances	= new ArrayList<>();
+	private List<SerieEcheances>		seriesEcheances	= new ArrayList<>();
+	private List<Mensualite>	mensualite		= new ArrayList<>();
+	private List<Strategy>		strategies		= new ArrayList<>();
+	private List<Assurance>		assurances		= new ArrayList<>();
 
 	public Pret() {
 		// emtpy
 	}
 
-	public Pret(int _nominal, String _tauxAssurance) {
-		this(_nominal, "Pret " + _nominal, null);
-	}
-
-	public Pret(int _nominal, String _name, String _premiereEcheance) {
-		nominal = new BigDecimal(_nominal);
-		nom = _name;
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		try {
-			debut = formatter.parse(_premiereEcheance);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public int getNbPeriodes() {
 		int maxPeriode = 0;
-		for (Echeance e : echeance) {
+		for (SerieEcheances e : seriesEcheances) {
 			maxPeriode = Math.max(maxPeriode, e.getFin());
 		}
 		return maxPeriode;
@@ -55,7 +38,7 @@ public class Pret {
 
 	public void runStrategies(List<Pret> _prets) throws Exception {
 		for (Strategy s : strategies) {
-			// Get only aleardy computed prets
+			// Get only already computed loans
 			List<Pret> previousLoans = new ArrayList<>();
 			for (Pret l : _prets) {
 				if (l.equals(this)) {
@@ -63,60 +46,51 @@ public class Pret {
 				}
 				previousLoans.add(l);
 			}
-
-			System.out.println("RUN Strategy: " + s.getName());
 			s.run(this, previousLoans);
 		}
 
 	}
 
-	public void setEcheances(int _start, int _end, String _rate, String _amount) {
-		echeance.add(new Echeance(_start, _end, _rate, _amount));
-
+	public void addSerieEcheances(int _start, int _end, String _rate, String _amount) {
+		seriesEcheances.add(new SerieEcheances(_start, _end, _rate, _amount));
 	}
 
-	public void increaseLastSeries() {
-		Echeance last = echeance.get(echeance.size() - 1);
-		last.setFin(last.getFin() + 1);
+	public void augmenteDureeDerniereSerie() {
+		getDerniereSerieEcheances().augmenteDuree(1);
 	}
 
-	public void reduceLastSeries() {
-		Echeance last = echeance.get(echeance.size() - 1);
-		if (last.getDebut() == last.getFin()) {
-			System.out.println("Removing last echeance");
-			echeance.remove(last);
+	public void reduitDureeDerniereSerie() {
+		SerieEcheances derniereSerie = getDerniereSerieEcheances();
+		if (derniereSerie.getDebut() == derniereSerie.getFin()) {
+			seriesEcheances.remove(derniereSerie);
 		} else {
-			last.setFin(last.getFin() - 1);
+			derniereSerie.augmenteDuree(-1);
 		}
 
 	}
 
-	public void increaseLastSerieAmount(String _i) {
-		Echeance last = echeance.get(echeance.size() - 1);
-		last.setMontant(last.getMontant().add(new BigDecimal(_i)));
-
+	public void augmenteMensualiteDerniereSerie(BigDecimal _montant) {
+		getDerniereSerieEcheances().augmenteMontant(_montant);
 	}
 
-	public void decreaseLastSerieAmount(String _scale) {
-		Echeance last = echeance.get(echeance.size() - 1);
-		last.setMontant(last.getMontant().subtract(new BigDecimal(_scale)));
-
+	public void reduitMensualiteDerniereSerie(BigDecimal _montant) {
+		getDerniereSerieEcheances().augmenteMontant(_montant.negate());
 	}
 
 	public void adjustLastPeriode(BigDecimal _restant) {
-		Echeance last = echeance.get(echeance.size() - 1);
+		SerieEcheances last = seriesEcheances.get(seriesEcheances.size() - 1);
 		// reduce size by 1
 		if (last.getDebut() == last.getFin()) {
 			// Just update it
 			last.setMontant(last.getMontant().add(_restant));
 		} else {
-			Echeance e = new Echeance();
+			SerieEcheances e = new SerieEcheances();
 			e.setFin(last.getFin());
 			e.setDebut(last.getFin());
 			e.setTaux(last.getTaux());
 			e.setMontant(last.getMontant().add(_restant));
 			last.setFin(last.getFin() - 1);
-			echeance.add(e);
+			seriesEcheances.add(e);
 		}
 
 	}
@@ -127,7 +101,7 @@ public class Pret {
 
 	public void printEcheances() {
 		System.out.print("[" + nom + "] Echeances :\n");
-		for (Echeance e : echeance) {
+		for (SerieEcheances e : seriesEcheances) {
 			System.out.printf("%3d - %3d : %6.2f \n", e.getDebut(), e.getFin(), e.getMontant());
 		}
 	}
@@ -153,7 +127,7 @@ public class Pret {
 		LinkedHashMap<Integer, BigDecimal> payments = new LinkedHashMap<>();
 
 		for (Pret p : _prets) {
-			for (Echeance e : p.echeance) {
+			for (SerieEcheances e : p.seriesEcheances) {
 				for (int i = e.getDebut(); i <= e.getFin(); i++) {
 					if (payments.get(i) == null) {
 						payments.put(i, BigDecimal.ZERO);
@@ -165,10 +139,10 @@ public class Pret {
 
 		// Create new
 
-		Echeance current = null;
+		SerieEcheances current = null;
 		BigDecimal previous = BigDecimal.ZERO;
 
-		int lastDefinedPeriod = getDerniereEcheance().getFin();
+		int lastDefinedPeriod = getDerniereSerieEcheances().getFin();
 		int i;
 
 		for (i = lastDefinedPeriod + 1; i < payments.size(); i++) {
@@ -178,17 +152,17 @@ public class Pret {
 					current.setFin(i - 1);
 				}
 				previous = restant;
-				current = new Echeance();
+				current = new SerieEcheances();
 				current.setMontant(restant);
 				current.setTaux(new BigDecimal(_rate));
 				current.setDebut(i);
-				echeance.add(current);
+				seriesEcheances.add(current);
 			}
 		}
 
 		current.setFin(i);
 
-		setEcheances(i + 1, i + 1, _rate, _target + "");
+		addSerieEcheances(i + 1, i + 1, _rate, _target + "");
 
 		// Create matching insurance
 		Assurance assurance = new Assurance();
@@ -216,12 +190,13 @@ public class Pret {
 
 		for (int n = 1; n <= nbPeriodes; n++) {
 
-			Echeance e = getEcheance(n);
+			SerieEcheances e = getEcheance(n);
 			Assurance a = getAssurance(n);
 
 			// Calcul assurance
 			BigDecimal mensualiteAssurance = a.getMensualite();
-			BigDecimal tauxNominalProportionnel = e.getTaux().setScale(12, RoundingMode.HALF_UP).divide(new BigDecimal(12), RoundingMode.HALF_UP);
+			BigDecimal tauxNominalProportionnel = e.getTaux().setScale(12, RoundingMode.HALF_UP)
+					.divide(new BigDecimal(12), RoundingMode.HALF_UP);
 
 			Mensualite pn = new Mensualite();
 			mensualite.add(pn);
@@ -254,9 +229,9 @@ public class Pret {
 		throw new Exception("Assurance not found for period [" + _n + "]");
 	}
 
-	private Echeance getEcheance(int _n) throws Exception {
+	private SerieEcheances getEcheance(int _n) throws Exception {
 		// System.out.println("--- " + _n);
-		for (Echeance e : echeance) {
+		for (SerieEcheances e : seriesEcheances) {
 			// System.out.println(e.getDebut() + " " + e.getFin());
 			if (e.getDebut() <= _n && e.getFin() >= _n) {
 				return e;
@@ -277,7 +252,7 @@ public class Pret {
 				System.out.print("+");
 
 			if (last.getCapitalRestantDu().intValue() > 0) {
-				increaseLastSeries();
+				augmenteDureeDerniereSerie();
 				getDerniereAssurance().increaseFrame();
 			} else {
 				break;
@@ -290,7 +265,7 @@ public class Pret {
 			if (_print)
 				System.out.print("-");
 			if (last.getCapitalRestantDu().intValue() < 0) {
-				reduceLastSeries();
+				reduitDureeDerniereSerie();
 			} else {
 				break;
 			}
@@ -302,14 +277,14 @@ public class Pret {
 
 	public void adjustConstantPayments() throws Exception {
 
-		adjustAmmout(50, "1");
-		adjustAmmout(5, "0.1");
-		adjustAmmout(0, "0.01");
+		adjustAmmout(50, new BigDecimal("1"));
+		adjustAmmout(5, new BigDecimal("0.1"));
+		adjustAmmout(0, new BigDecimal("0.01"));
 		adjustLastPeriode(getCapitalRestantDu());
 
 	}
 
-	private void adjustAmmout(int _threathold, String _scale) throws Exception {
+	private void adjustAmmout(int _threathold, BigDecimal _scale) throws Exception {
 		System.out.print("[" + nom + "] Ajuste les menusualités pour avoir des menusalités égales (scale:" + _scale + ") ");
 		int count = 100;
 		while (true) {
@@ -319,10 +294,10 @@ public class Pret {
 			if (last.getCapitalRestantDu().intValue() > _threathold) {
 				System.out.print("+");
 				// Adjust mensualité
-				increaseLastSerieAmount(_scale);
+				augmenteMensualiteDerniereSerie(_scale);
 			} else if (last.getCapitalRestantDu().intValue() < -_threathold) {
 				System.out.print("-");
-				decreaseLastSerieAmount(_scale);
+				reduitMensualiteDerniereSerie(_scale);
 			} else {
 				break;
 			}
@@ -339,12 +314,56 @@ public class Pret {
 		assurances.add(new Assurance(_debut, _fin, _montant + "", _taux));
 	}
 
-	public List<Echeance> getEcheances() {
-		return echeance;
+	public SerieEcheances getDerniereSerieEcheances() {
+		if (seriesEcheances.size() == 0) {
+			return null;
+		}
+		return seriesEcheances.get(seriesEcheances.size() - 1);
 	}
 
-	public void setEcheances(List<Echeance> _echeance) {
-		echeance = _echeance;
+	public BigDecimal sommeInterets() {
+		BigDecimal sum = BigDecimal.ZERO;
+		for (Mensualite p : mensualite) {
+			if (p.getMontantInterets() != null)
+				sum = sum.add(p.getMontantInterets());
+		}
+		return sum;
+	}
+
+	public Mensualite getDerniereMensualite() {
+		if (mensualite.size() == 0) {
+			return null;
+		}
+		return mensualite.get(mensualite.size() - 1);
+	}
+
+	private Assurance getDerniereAssurance() {
+		if (assurances.size() == 0) {
+			return null;
+		}
+		return assurances.get(assurances.size() - 1);
+	}
+
+	public void printAmortissement() {
+		System.out.println("[" + nom + "] Tableau d'amortissement : \n"
+				+ String.format("terme%12s%10s%10s%10s%10s%10s", "date", "interets", "assur", "cp remb.", "cp rest.", "echeance"));
+
+		for (Mensualite m : mensualite) {
+			System.out.println(m.toString());
+		}
+
+	}
+
+	public List<Assurance> getAssurances() {
+		return assurances;
+	}
+
+	public List<SerieEcheances> getEcheances() {
+		return seriesEcheances;
+	}
+
+	public void setEcheances(List<SerieEcheances> _serieEcheances) {
+		seriesEcheances = _serieEcheances;
 	}
 
 	public BigDecimal getNominal() {
@@ -387,13 +406,6 @@ public class Pret {
 		strategies = _strategies;
 	}
 
-	public Echeance getDerniereEcheance() {
-		if (echeance.size() == 0) {
-			return null;
-		}
-		return echeance.get(echeance.size() - 1);
-	}
-
 	public void setNom(String _name) {
 		nom = _name;
 	}
@@ -401,42 +413,4 @@ public class Pret {
 	public String getNom() {
 		return nom;
 	}
-
-	public BigDecimal sommeInterets() {
-		BigDecimal sum = BigDecimal.ZERO;
-		for (Mensualite p : mensualite) {
-			if (p.getMontantInterets() != null)
-				sum = sum.add(p.getMontantInterets());
-		}
-		return sum;
-	}
-
-	public Mensualite getDerniereMensualite() {
-		if (mensualite.size() == 0) {
-			return null;
-		}
-		return mensualite.get(mensualite.size() - 1);
-	}
-
-	private Assurance getDerniereAssurance() {
-		if (assurances.size() == 0) {
-			return null;
-		}
-		return assurances.get(assurances.size() - 1);
-	}
-
-	public List<Assurance> getAssurances() {
-		return assurances;
-	}
-
-	public void printAmortissement() {
-		System.out.println("[" + nom + "] Tableau d'amortissement : \n"
-				+ String.format("terme%12s%10s%10s%10s%10s%10s", "date", "interets", "assur", "cp remb.", "cp rest.", "echeance"));
-
-		for (Mensualite m : mensualite) {
-			System.out.println(m.toString());
-		}
-
-	}
-
 }
