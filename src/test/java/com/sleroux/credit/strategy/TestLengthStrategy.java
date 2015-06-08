@@ -25,7 +25,7 @@ public class TestLengthStrategy {
 		duree.setTaux("0.0");
 		duree.setTauxAssurance("0.0");
 
-		l.amortization(true);
+		l.amortization();
 
 		duree.run(l, null);
 
@@ -55,7 +55,7 @@ public class TestLengthStrategy {
 		duree.setTaux("0.0");
 		duree.setTauxAssurance("0.0");
 
-		l.amortization(true);
+		l.amortization();
 
 		duree.run(l, null);
 
@@ -83,7 +83,7 @@ public class TestLengthStrategy {
 		duree.setTaux("0.1");
 		duree.setTauxAssurance("0.0");
 
-		l.amortization(true);
+		l.amortization();
 
 		duree.run(l, null);
 		

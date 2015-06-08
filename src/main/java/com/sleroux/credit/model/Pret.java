@@ -125,8 +125,8 @@ public class Pret {
 		return mensualite.get(mensualite.size() - 1).getCapitalRestantDu();
 	}
 
-	public void printSeries() {
-		System.out.print("[" + nom + "] Echeance :\n");
+	public void printEcheances() {
+		System.out.print("[" + nom + "] Echeances :\n");
 		for (Echeance e : echeance) {
 			System.out.printf("%3d - %3d : %6.2f \n", e.getDebut(), e.getFin(), e.getMontant());
 		}
@@ -200,7 +200,7 @@ public class Pret {
 
 	}
 
-	public void amortization(boolean _print) throws Exception {
+	public void amortization() throws Exception {
 
 		Calendar c = Calendar.getInstance();
 		if (debut != null) {
@@ -271,7 +271,7 @@ public class Pret {
 			System.out.print("[" + nom + "] Ajuste le nombre de menusalités ");
 
 		while (true) {
-			amortization(false);
+			amortization();
 			Mensualite last = mensualite.get(mensualite.size() - 1);
 			if (_print)
 				System.out.print("+");
@@ -285,7 +285,7 @@ public class Pret {
 		}
 
 		while (true) {
-			amortization(false);
+			amortization();
 			Mensualite last = mensualite.get(mensualite.size() - 1);
 			if (_print)
 				System.out.print("-");
@@ -313,7 +313,7 @@ public class Pret {
 		System.out.print("[" + nom + "] Ajuste les menusualités pour avoir des menusalités égales (scale:" + _scale + ") ");
 		int count = 100;
 		while (true) {
-			amortization(false);
+			amortization();
 			Mensualite last = mensualite.get(mensualite.size() - 1);
 
 			if (last.getCapitalRestantDu().intValue() > _threathold) {

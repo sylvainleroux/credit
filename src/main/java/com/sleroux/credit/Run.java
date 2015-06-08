@@ -15,7 +15,7 @@ public class Run {
 		
 		mapper.setPropertyNamingStrategy(new CamelCaseNamingStrategy());
 
-		InputStream inputStream = Run.class.getResourceAsStream("/sample.json");
+		InputStream inputStream = Run.class.getResourceAsStream("/data.json");
 		Prets prets = mapper.readValue(inputStream, Prets.class);
 
 		prets.printAmo();

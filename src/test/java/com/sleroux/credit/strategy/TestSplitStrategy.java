@@ -20,14 +20,14 @@ public class TestSplitStrategy {
 		l.addAssurance(1, 10, l.getNominal() + "", "0.0");
 
 		
-		l.printSeries();
+		l.printEcheances();
 		l.printAssurances();
 		
 		Split split = new Split();
 		split.setSplitAfter(5);
 		split.run(l, null);
 		
-		l.printSeries();
+		l.printEcheances();
 		l.printAssurances();
 		
 		Assert.assertEquals(5, l.getDerniereEcheance().getFin());

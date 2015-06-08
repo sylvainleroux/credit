@@ -20,7 +20,7 @@ public class TestSmoothingStrategy {
 		l1.setEcheances(1, 5, "0", "100");
 		l1.addAssurance(1, 5, "500", "0");
 
-		l1.amortization(true);
+		l1.amortization();
 
 		Pret l = new Pret();
 		l.setNom("Test");
@@ -28,7 +28,7 @@ public class TestSmoothingStrategy {
 		l.addAssurance(1, 1, "1", "0.00");
 		l.setEcheances(1, 1, "0.2", "500");
 
-		l.amortization(true);
+		l.amortization();
 
 		Lissage lissage = new Lissage();
 		lissage.setMensualiteCible(800);

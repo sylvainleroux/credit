@@ -18,11 +18,11 @@ public class Lissage extends Strategy {
 		
 		BigDecimal principal = _pret.getMensualites().get(_pret.getDerniereEcheance().getFin()).getCapitalRestantDu();
 		
-		_pret.printSeries();
+		_pret.printEcheances();
 		_pret.createNewSeries(mensualiteCible, taux, tauxAssurance, principal, _previousLoans);
 		_pret.adjustLengthForTargetPayment(true);
 		_pret.adjustConstantPayments();
-		_pret.printSeries();
+		_pret.printEcheances();
 
 	}
 

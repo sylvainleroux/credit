@@ -19,7 +19,11 @@ public class Prets {
 
 	public void printAmo() throws Exception {
 		for (Pret l : prets){
-			l.amortization(true);
+			l.printEcheances();
+			
+			
+			l.amortization();
+			l.printAmortissement();
 		}
 		
 	}
