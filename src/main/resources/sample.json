@@ -1,44 +1,45 @@
 {
   "loans": [
     {
-      "name": "PRET1",
-      "principal": 2500,
-      "start_date": "2011-01-01",
-      "series": [
-        {"start":   1, "end": 24, "amount": 10, "rate": 0.00 }
+      "nom": "PRET1",
+      "nominal": 2500,
+      "debut": "2011-01-01",
+      "echeances": [
+        {"debut":   1, "fin": 24, "montant": 10, "taux": 0.00 }
       ],
-      "insurances": [
-        {"start": 1, "end": 24, "principal": 2500, "rate": 0.003 }
+      "assurances": [
+        {"debut": 1, "fin": 24, "capital": 2500, "taux": 0.003 }
       ]
     },
     {
-      "name": "PRET2",
-      "principal": 30000,
-      "start_date": "2011-01-01",
-      "series": [
-        { "start": 1, "end": 120, "amount": 297.18, "rate": 0.03}
+      "nom": "PRET2",
+      "nominal": 30000,
+      "debut": "2011-01-01",
+      "echeances": [
+        { "debut": 1, "fin": 120, "montant": 297.18, "taux": 0.03}
       ],
-      "insurances": [
-        { "start": 1, "end": 120, "principal": 30000, "rate": 0.003 }
+      "assurances": [
+        { "debut": 1, "fin": 120, "capital": 30000, "taux": 0.003 }
       ],
       "strategies":[
-     
+     	 { "nom" : "split",  "split_after" : 20},
+      	{ "nom" : "length", "nb_mois" : 50, "taux": 0.017, "taux_assurance": 0.001}
       ]
     },
     {
-      "name": "PRET3",
-      "principal": 40000,
-      "start_date": "2011-01-01",
-      "series": [
-        { "start":   1, "end":  1, "amount": 200, "rate": 0.04 }
+      "nom": "PRET3",
+      "nominal": 40000,
+      "debut": "2011-01-01",
+      "echeances": [
+        { "debut":   1, "fin":  168, "montant": 324, "taux": 0.04 }
         
       ],
-      "insurances": [
-        { "start": 1, "end": 168, "principal": 40000, "rate": 0.004 }
+      "assurances": [
+        { "debut": 1, "fin": 168, "capital": 40000, "taux": 0.004 }
       ],
       "strategies":[
-      	{ "name" : "split",  "split_after" : 1 },
-      	{ "name" : "smoothing", "target" : 500, "rate" : 0.040, "insurance_rate" : "0.004"}
+      	 { "nom" : "split",  "split_after" : 20},
+      	{ "nom" : "smoothing", "mensualite_cible" : 730, "taux" : 0.040, "taux_assurance" : "0.004"}
       ]
     }
   ]

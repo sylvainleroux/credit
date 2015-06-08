@@ -6,33 +6,98 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.sleroux.credit.model.Loan;
-import com.sleroux.credit.model.Series;
+import com.sleroux.credit.model.Echeance;
+import com.sleroux.credit.model.Pret;
 
 public class TestLengthStrategy {
 	@Test
-	public void testLenght() throws Exception {
+	public void testLength() throws Exception {
+
+		int amount = 1000;
+
+		Pret l = new Pret();
+		l.setNom("Test");
+		l.setNominal(new BigDecimal(amount));
+		l.addAssurance(1, amount, "1", "0.00");
+
+		Duree duree = new Duree();
+		duree.setNbMois(10);
+		duree.setTaux("0.0");
+		duree.setTauxAssurance("0.0");
+
+		l.amortization(true);
+
+		duree.run(l, null);
+
+		BigDecimal interests = l.sommeInterets();
+		BigDecimal payed = BigDecimal.ZERO;
+		for (Echeance s : l.getEcheances()) {
+			payed = payed.add(s.getMontant().multiply(new BigDecimal(s.getFin() - s.getDebut() + 1)));
+		}
+
+		l.printMensualites();
+		Assert.assertEquals(new BigDecimal(amount).add(interests), payed);
+		Assert.assertEquals(new BigDecimal(100).setScale(2), l.getDerniereMensualite().getEcheance());
+	}
+
+	@Test
+	public void testLength2() throws Exception {
 
 		int amount = 100;
 
-		Loan l = new Loan();
-		l.setName("Test");
-		l.setNominal(amount);
-		l.addInsurance(1, 10000, "1", "0.00");
+		Pret l = new Pret();
+		l.setNom("Test");
+		l.setNominal(new BigDecimal(amount));
+		l.addAssurance(1, amount, "1", "0.00");
 
-		Length length = new Length();
-		length.setNbPeriods(20);
-		length.setRate("0.2");
+		Duree duree = new Duree();
+		duree.setNbMois(10);
+		duree.setTaux("0.0");
+		duree.setTauxAssurance("0.0");
 
-		length.run(l, null);
+		l.amortization(true);
 
-		BigDecimal interests = l.sumInterests();
+		duree.run(l, null);
 
+		BigDecimal interests = l.sommeInterets();
 		BigDecimal payed = BigDecimal.ZERO;
-		for (Series s : l.getSeries()) {
-			payed = payed.add(s.getAmount().multiply(new BigDecimal(s.getEnd() - s.getStart() + 1)));
+		for (Echeance s : l.getEcheances()) {
+			payed = payed.add(s.getMontant().multiply(new BigDecimal(s.getFin() - s.getDebut() + 1)));
 		}
 		Assert.assertEquals(new BigDecimal(amount).add(interests), payed);
+		Assert.assertEquals(new BigDecimal(10).setScale(2), l.getDerniereMensualite().getEcheance());
+	}
+	
+	@Test
+	public void testLengthInterests() throws Exception {
 
+		int amount = 1000;
+
+		Pret l = new Pret();
+		l.setNom("Test");
+		l.setNominal(new BigDecimal(amount));
+		l.addAssurance(1, amount, "1", "0.00");
+
+		Duree duree = new Duree();
+		duree.setNbMois(10);
+		duree.setTaux("0.1");
+		duree.setTauxAssurance("0.0");
+
+		l.amortization(true);
+
+		duree.run(l, null);
+		
+		l.printAmortissement();
+
+		BigDecimal interests = l.sommeInterets();
+		BigDecimal payed = BigDecimal.ZERO;
+		for (Echeance s : l.getEcheances()) {
+			payed = payed.add(s.getMontant().multiply(new BigDecimal(s.getFin() - s.getDebut() + 1)));
+		}
+		
+		
+		
+		Assert.assertEquals(new BigDecimal(amount).add(interests), payed);
+		Assert.assertEquals(new BigDecimal("103.80").setScale(2), l.getDerniereMensualite().getEcheance());
 	}
 }

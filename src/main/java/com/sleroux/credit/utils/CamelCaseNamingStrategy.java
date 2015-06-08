@@ -9,9 +9,9 @@ import com.fasterxml.jackson.databind.introspect.AnnotatedMethod;
  * Converts standard CamelCase field and method names to typical JSON field
  * names having all lower case characters with an underscore separating
  * different words. For example, all of the following are converted to JSON
- * field name "some_name":
+ * field nom "some_name":
  * 
- * Java field name "someName" Java method name "getSomeName" Java method name
+ * Java field nom "someName" Java method nom "getSomeName" Java method nom
  * "setSomeName"
  * 
  * Typical Use:

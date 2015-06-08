@@ -3,31 +3,31 @@ package com.sleroux.credit.strategy;
 import java.util.Iterator;
 import java.util.List;
 
-import com.sleroux.credit.model.Loan;
-import com.sleroux.credit.model.Series;
+import com.sleroux.credit.model.Pret;
+import com.sleroux.credit.model.Echeance;
 
 public class Split extends Strategy {
 
 	int	splitAfter;
 
 	@Override
-	public void run(Loan _loan, List<Loan> _previousLoans) {
+	public void run(Pret _pret, List<Pret> _previousLoans) {
 		// Split series
 		{
 			boolean delete = false;
-			Iterator<Series> i = _loan.getSeries().iterator();
+			Iterator<Echeance> i = _pret.getEcheances().iterator();
 			while (i.hasNext()) {
-				Series s = i.next();
+				Echeance s = i.next();
 				if (delete) {
 					i.remove();
-				} else if (s.getEnd() >= splitAfter) {
-					s.setEnd(splitAfter);
+				} else if (s.getFin() >= splitAfter) {
+					s.setFin(splitAfter);
 					delete = true;
 				}
 			}
 		}
-		// Split insurances
-		_loan.getInsurances().get(0).setEnd(splitAfter);
+		// Split assurances
+		_pret.getAssurances().get(0).setFin(splitAfter);
 
 	}
 

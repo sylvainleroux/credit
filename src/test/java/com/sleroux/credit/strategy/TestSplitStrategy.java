@@ -1,25 +1,36 @@
 package com.sleroux.credit.strategy;
 
+import java.math.BigDecimal;
+
 import junit.framework.Assert;
 
 import org.junit.Test;
 
-import com.sleroux.credit.model.Loan;
+import com.sleroux.credit.model.Pret;
 
 public class TestSplitStrategy {
 	@Test
-	public void testSplit() {
+	public void testSplit() throws Exception {
 
-		Loan l = new Loan();
-		l.addSeries(1, 10, "0.2", "100");
-		l.addSeries(1, 10, "0.1", "100");
+		Pret l = new Pret();
+		l.setNom("Test Split");
+		l.setNominal(new BigDecimal(1000));
+		l.setEcheances(1, 10, "0.2", "100");
+		
+		l.addAssurance(1, 10, l.getNominal() + "", "0.0");
 
+		
+		l.printSeries();
+		l.printAssurances();
+		
 		Split split = new Split();
 		split.setSplitAfter(5);
-
 		split.run(l, null);
-
-		Assert.assertEquals(5, l.getLastSeries().getEnd());
+		
+		l.printSeries();
+		l.printAssurances();
+		
+		Assert.assertEquals(5, l.getDerniereEcheance().getFin());
 
 	}
 

@@ -5,33 +5,33 @@ import java.util.List;
 
 import com.sleroux.credit.utils.CalcTools;
 
-public class Loans {
+public class Prets {
 
-	public List<Loan>	loans	= new ArrayList<>();
+	public List<Pret>	prets	= new ArrayList<>();
 
-	public List<Loan> getLoans() {
-		return loans;
+	public List<Pret> getLoans() {
+		return prets;
 	}
 
-	public void setLoans(List<Loan> _loans) {
-		loans = _loans;
+	public void setLoans(List<Pret> _prets) {
+		prets = _prets;
 	}
 
 	public void printAmo() throws Exception {
-		for (Loan l : loans){
+		for (Pret l : prets){
 			l.amortization(true);
 		}
 		
 	}
 
 	public void runStrategies() throws Exception {
-		for (Loan l : loans){
-			l.runStrategies(loans);
+		for (Pret l : prets){
+			l.runStrategies(prets);
 		}
 	}
 
 	public void printSeries() {
-		CalcTools.compileSeries(loans);
+		CalcTools.compileSeries(prets);
 		
 	}
 

@@ -4,23 +4,23 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import com.sleroux.credit.model.Loan;
-import com.sleroux.credit.model.Payment;
-import com.sleroux.credit.model.Series;
+import com.sleroux.credit.model.Echeance;
+import com.sleroux.credit.model.Mensualite;
+import com.sleroux.credit.model.Pret;
 
 public class CalcTools {
 
-	public static void compileSeries(List<Loan> _loans) {
+	public static void compileSeries(List<Pret> _prets) {
 
 		System.out.println("[Total] Mensualités");
 		LinkedHashMap<Integer, BigDecimal> mensualites = new LinkedHashMap<>();
-		for (Loan p : _loans) {
-			for (Series e : p.getEcheances()) {
-				for (int i = e.getStart(); i <= e.getEnd(); i++) {
+		for (Pret p : _prets) {
+			for (Echeance e : p.getEcheances()) {
+				for (int i = e.getDebut(); i <= e.getFin(); i++) {
 					if (mensualites.get(i) == null) {
 						mensualites.put(i, BigDecimal.ZERO);
 					}
-					mensualites.put(i, mensualites.get(i).add(e.getAmount()));
+					mensualites.put(i, mensualites.get(i).add(e.getMontant()));
 				}
 			}
 		}
@@ -46,25 +46,25 @@ public class CalcTools {
 		System.out.println(out + String.format("%3d : %6.2f", last, mensualites.get(last)));
 	}
 
-	public static void sumOfInterests(Loan... prets) {
+	public static void sumOfInterests(List<Pret> prets) {
 		System.out.println("=TOTAL================================================================");
 		BigDecimal bitTotalAssurance = BigDecimal.ZERO;
 		BigDecimal bigTotal = BigDecimal.ZERO;
-		for (Loan _pret3 : prets) {
+		for (Pret _pret3 : prets) {
 			BigDecimal total = BigDecimal.ZERO;
 			BigDecimal ass = BigDecimal.ZERO;
-			for (Payment p : _pret3.getPayments()) {
-				if (p.montantInterets != null) {
-					total = total.add(p.montantInterets);
-					bigTotal = bigTotal.add(p.montantInterets);
+			for (Mensualite p : _pret3.getMensualites()) {
+				if (p.getMontantInterets() != null) {
+					total = total.add(p.getMontantInterets());
+					bigTotal = bigTotal.add(p.getMontantInterets());
 
 				}
-				if (p.montantAssurances != null) {
-					ass = ass.add(p.montantAssurances);
-					bitTotalAssurance = bitTotalAssurance.add(p.montantAssurances);
+				if (p.getMontantAssurances() != null) {
+					ass = ass.add(p.getMontantAssurances());
+					bitTotalAssurance = bitTotalAssurance.add(p.getMontantAssurances());
 				}
 			}
-			System.out.printf("[%-20s] Intérêts : %8.2f  Insurance : %8.2f\n", _pret3.name, total, ass);
+			System.out.printf("[%-20s] Intérêts : %8.2f  Assurance : %8.2f\n", _pret3.getNom(), total, ass);
 		}
 		System.out.println("TOTAL INTERETS   : " + bigTotal);
 		System.out.println("TOTAL ASSURANCES : " + bitTotalAssurance);
@@ -72,28 +72,28 @@ public class CalcTools {
 
 	}
 
-	public static int sumOfInterestsLastPeriodes(int nbPeriodes, Loan... prets) {
+	public static int sumOfInterestsLastPeriodes(int nbPeriodes, Pret... prets) {
 		System.out.println("=NOUVEAU==============================================================");
 		BigDecimal bitTotalAssurance = BigDecimal.ZERO;
 		BigDecimal bigTotal = BigDecimal.ZERO;
-		for (Loan _pret3 : prets) {
+		for (Pret _pret3 : prets) {
 			BigDecimal total = BigDecimal.ZERO;
 			BigDecimal ass = BigDecimal.ZERO;
-			for (Payment p : _pret3.getPayments()) {
-				if (p.terme < nbPeriodes + 1) {
+			for (Mensualite p : _pret3.getMensualites()) {
+				if (p.getTerme() < nbPeriodes + 1) {
 					continue;
 				}
-				if (p.montantInterets != null) {
-					total = total.add(p.montantInterets);
-					bigTotal = bigTotal.add(p.montantInterets);
+				if (p.getMontantInterets() != null) {
+					total = total.add(p.getMontantInterets());
+					bigTotal = bigTotal.add(p.getMontantInterets());
 
 				}
-				if (p.montantAssurances != null) {
-					ass = ass.add(p.montantAssurances);
-					bitTotalAssurance = bitTotalAssurance.add(p.montantAssurances);
+				if (p.getMontantAssurances() != null) {
+					ass = ass.add(p.getMontantAssurances());
+					bitTotalAssurance = bitTotalAssurance.add(p.getMontantAssurances());
 				}
 			}
-			System.out.printf("[%-20s] Intérêts : %8.2f  Insurance : %8.2f\n", _pret3.name, total, ass);
+			System.out.printf("[%-20s] Intérêts : %8.2f  Assurance : %8.2f\n", _pret3.getNom(), total, ass);
 		}
 		System.out.println("TOTAL INTERETS   : " + bigTotal);
 		System.out.println("TOTAL ASSURANCES : " + bitTotalAssurance);

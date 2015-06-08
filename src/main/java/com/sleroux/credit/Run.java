@@ -3,7 +3,8 @@ package com.sleroux.credit;
 import java.io.InputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sleroux.credit.model.Loans;
+import com.sleroux.credit.model.Prets;
+import com.sleroux.credit.utils.CalcTools;
 import com.sleroux.credit.utils.CamelCaseNamingStrategy;
 
 public class Run {
@@ -15,12 +16,15 @@ public class Run {
 		mapper.setPropertyNamingStrategy(new CamelCaseNamingStrategy());
 
 		InputStream inputStream = Run.class.getResourceAsStream("/sample.json");
-		Loans loans = mapper.readValue(inputStream, Loans.class);
+		Prets prets = mapper.readValue(inputStream, Prets.class);
 
-		loans.printAmo();
-		loans.runStrategies();
-		loans.printAmo();
-		loans.printSeries();
+		prets.printAmo();
+		CalcTools.sumOfInterests(prets.getLoans());
+		prets.runStrategies();
+		prets.printAmo();
+		prets.printSeries();
+		CalcTools.sumOfInterests(prets.getLoans());
+		
 	}
 
 }
