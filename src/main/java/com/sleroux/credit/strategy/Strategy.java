@@ -8,8 +8,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.sleroux.credit.model.Pret;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "nom")
-@JsonSubTypes({ @Type(value = Split.class, name = "split"), @Type(value = Duree.class, name = "length"),
-		@Type(value = Lissage.class, name = "smoothing") })
+@JsonSubTypes({ 
+	@Type(value = Split.class, name = "split"), 
+	@Type(value = Duree.class, name = "length"),
+	@Type(value = Lissage.class, name = "lissage-mensualite"),
+	@Type(value = LissageDuree.class, name = "lissage-duree") 
+})
 public abstract class Strategy {
 	public Strategy() {
 		// Empty

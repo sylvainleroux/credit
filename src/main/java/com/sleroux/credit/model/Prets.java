@@ -22,7 +22,7 @@ public class Prets {
 			l.printEcheances();
 			
 			
-			l.amortization();
+			l.amortissement();
 			l.printAmortissement();
 		}
 		

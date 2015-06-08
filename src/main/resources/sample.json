@@ -39,7 +39,7 @@
       ],
       "strategies":[
       	 { "nom" : "split",  "split_after" : 20},
-      	{ "nom" : "smoothing", "mensualite_cible" : 730, "taux" : 0.040, "taux_assurance" : "0.004"}
+      	{ "nom" : "lissage-mensualite", "mensualite_cible" : 730, "taux" : 0.040, "taux_assurance" : "0.004"}
       ]
     }
   ]

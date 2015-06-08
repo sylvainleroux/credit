@@ -39,17 +39,17 @@ public class Duree extends Strategy {
 		_pret.printEcheances();
 		_pret.printAssurances();
 
-		_pret.amortization();
+		_pret.amortissement();
 		while (_pret.getDerniereMensualite().getCapitalRestantDu().compareTo(BigDecimal.ZERO) > 0) {
 			_pret.augmenteMensualiteDerniereSerie(BigDecimal.ONE);
-			_pret.amortization();
+			_pret.amortissement();
 			System.out.print(".");
 		}
 		System.out.print("\n");
 		_pret.adjustConstantPayments();
 		_pret.printEcheances();
 
-		_pret.amortization();
+		_pret.amortissement();
 
 	}
 
