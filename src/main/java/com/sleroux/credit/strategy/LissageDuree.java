@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sleroux.credit.model.Pret;
 import com.sleroux.credit.model.SerieEcheances;
 
-public class LissageDuree extends Strategy {
+public class LissageDuree extends StrategyBase {
 
 	@JsonProperty(required = false)
 	private int		dureeCible;

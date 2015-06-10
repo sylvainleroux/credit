@@ -15,6 +15,7 @@ public class Mensualite {
 	private BigDecimal						montantAssurances	= BigDecimal.ZERO;
 	private BigDecimal						capitalAmorti		= BigDecimal.ZERO;
 	private BigDecimal						echeance			= BigDecimal.ZERO;
+	private BigDecimal						apport				= BigDecimal.ZERO;
 
 	public BigDecimal getEcheance() {
 		return echeance;
@@ -78,6 +79,14 @@ public class Mensualite {
 
 		return String.format(" %4d%12s%10.2f%10.2f%10.2f%10.2f%10.2f", terme, dateFormatted, montantInterets, montantAssurances, capitalAmorti,
 				capitalRestantDu, echeance);
+	}
+
+	public BigDecimal getApport() {
+		return apport;
+	}
+
+	public void setApport(BigDecimal _apport) {
+		apport = _apport;
 	}
 
 }

@@ -20,14 +20,14 @@ public class TestLengthStrategy {
 		l.setNominal(new BigDecimal(amount));
 		l.addAssurance(1, amount, "1", "0.00");
 
-		Duree duree = new Duree();
-		duree.setNbMois(10);
-		duree.setTaux("0.0");
-		duree.setTauxAssurance("0.0");
+		DureeStrategy dureeStrategy = new DureeStrategy();
+		dureeStrategy.setNbMois(10);
+		dureeStrategy.setTaux("0.0");
+		dureeStrategy.setTauxAssurance("0.0");
 
-		l.amortissement();
+		l.calcAmortization();
 
-		duree.run(l, null);
+		dureeStrategy.run(l, null);
 
 		BigDecimal interests = l.sommeInterets();
 		BigDecimal payed = BigDecimal.ZERO;
@@ -50,14 +50,14 @@ public class TestLengthStrategy {
 		l.setNominal(new BigDecimal(amount));
 		l.addAssurance(1, amount, "1", "0.00");
 
-		Duree duree = new Duree();
-		duree.setNbMois(10);
-		duree.setTaux("0.0");
-		duree.setTauxAssurance("0.0");
+		DureeStrategy dureeStrategy = new DureeStrategy();
+		dureeStrategy.setNbMois(10);
+		dureeStrategy.setTaux("0.0");
+		dureeStrategy.setTauxAssurance("0.0");
 
-		l.amortissement();
+		l.calcAmortization();
 
-		duree.run(l, null);
+		dureeStrategy.run(l, null);
 
 		BigDecimal interests = l.sommeInterets();
 		BigDecimal payed = BigDecimal.ZERO;
@@ -78,14 +78,14 @@ public class TestLengthStrategy {
 		l.setNominal(new BigDecimal(amount));
 		l.addAssurance(1, amount, "1", "0.00");
 
-		Duree duree = new Duree();
-		duree.setNbMois(10);
-		duree.setTaux("0.1");
-		duree.setTauxAssurance("0.0");
+		DureeStrategy dureeStrategy = new DureeStrategy();
+		dureeStrategy.setNbMois(10);
+		dureeStrategy.setTaux("0.1");
+		dureeStrategy.setTauxAssurance("0.0");
 
-		l.amortissement();
+		l.calcAmortization();
 
-		duree.run(l, null);
+		dureeStrategy.run(l, null);
 		
 		l.printAmortissement();
 
@@ -97,7 +97,7 @@ public class TestLengthStrategy {
 		
 		
 		
-		Assert.assertEquals(new BigDecimal(amount).add(interests), payed);
-		Assert.assertEquals(new BigDecimal("103.80").setScale(2), l.getDerniereMensualite().getEcheance());
+		Assert.assertEquals(new BigDecimal(amount).add(interests).setScale(2), payed.setScale(2));
+		Assert.assertEquals(new BigDecimal("103.80").setScale(2), l.getDerniereMensualite().getEcheance().setScale(2));
 	}
 }

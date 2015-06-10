@@ -9,13 +9,14 @@ import com.sleroux.credit.model.Pret;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "nom")
 @JsonSubTypes({ 
-	@Type(value = Split.class, name = "split"), 
-	@Type(value = Duree.class, name = "length"),
-	@Type(value = Lissage.class, name = "lissage-mensualite"),
-	@Type(value = LissageDuree.class, name = "lissage-duree") 
+	@Type(value = SplitStrategy.class, name = "split"), 
+	@Type(value = DureeStrategy.class, name = "length"),
+	@Type(value = LissageStrategy.class, name = "lissage-mensualite"),
+	@Type(value = LissageDuree.class, name = "lissage-duree"),
+	@Type(value = ApportStrategy.class, name = "apport") 
 })
-public abstract class Strategy {
-	public Strategy() {
+public abstract class StrategyBase {
+	public StrategyBase() {
 		// Empty
 	}
 

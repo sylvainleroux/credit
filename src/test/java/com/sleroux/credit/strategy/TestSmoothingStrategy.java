@@ -20,7 +20,7 @@ public class TestSmoothingStrategy {
 		l1.addSerieEcheances(1, 5, "0", "100");
 		l1.addAssurance(1, 5, "500", "0");
 
-		l1.amortissement();
+		l1.calcAmortization();
 
 		Pret l = new Pret();
 		l.setNom("Test");
@@ -28,14 +28,14 @@ public class TestSmoothingStrategy {
 		l.addAssurance(1, 1, "1", "0.00");
 		l.addSerieEcheances(1, 1, "0.2", "500");
 
-		l.amortissement();
+		l.calcAmortization();
 
-		Lissage lissage = new Lissage();
-		lissage.setMensualiteCible(800);
-		lissage.setTaux("0.1");
-		lissage.setTauxAssurance("0.000");
+		LissageStrategy lissageStrategy = new LissageStrategy();
+		lissageStrategy.setMensualiteCible(800);
+		lissageStrategy.setTaux("0.1");
+		lissageStrategy.setTauxAssurance("0.000");
 
-		lissage.run(l, Arrays.asList(l1));
+		lissageStrategy.run(l, Arrays.asList(l1));
 
 		BigDecimal checksum = l1.sommeInterets().add(l1.getNominal()).add(l.getNominal()).add(l.sommeInterets());
 		BigDecimal payed = BigDecimal.ZERO;

@@ -6,7 +6,7 @@ import java.util.List;
 import com.sleroux.credit.model.Pret;
 import com.sleroux.credit.model.SerieEcheances;
 
-public class Lissage extends Strategy {
+public class LissageStrategy extends StrategyBase {
 
 	private int		mensualiteCible;
 

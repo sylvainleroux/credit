@@ -6,13 +6,13 @@ import java.util.List;
 import com.sleroux.credit.model.Pret;
 import com.sleroux.credit.model.SerieEcheances;
 
-public class Split extends Strategy {
+public class SplitStrategy extends StrategyBase {
 
 	int	splitAfter;
 
 	@Override
 	public void run(Pret _pret, List<Pret> _previousLoans) {
-		// Split series
+		// SplitStrategy series
 		{
 			boolean delete = false;
 			Iterator<SerieEcheances> i = _pret.getEcheances().iterator();
@@ -26,7 +26,7 @@ public class Split extends Strategy {
 				}
 			}
 		}
-		// Split assurances
+		// SplitStrategy assurances
 		_pret.getAssurances().get(0).setFin(splitAfter);
 
 	}

@@ -1,5 +1,7 @@
 package com.sleroux.credit;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,31 +11,44 @@ import com.sleroux.credit.utils.CamelCaseNamingStrategy;
 
 public class Run {
 
-	private final static ObjectMapper	mapper	= new ObjectMapper();
-
 	public static void main(String[] args) throws Exception {
 
-		String file = null;
+		// Load Json config
+		InputStream inputStream = null;
 		if (args.length == 0) {
-			file = "/sample.json";
+			System.out.println("Pass a filename as parameter. Using default file");
+			inputStream = Run.class.getResourceAsStream("/sample.json");
 		} else {
-			file = args[0];
+			System.out.println("Importing file : " + args[0]);
+			inputStream = new FileInputStream(new File(args[0]));
 		}
 
-		System.out.println(file);
-
+		// Convert Json to object model
+		ObjectMapper mapper = new ObjectMapper();
 		mapper.setPropertyNamingStrategy(new CamelCaseNamingStrategy());
-
-		InputStream inputStream = Run.class.getResourceAsStream(file);
 		Prets prets = mapper.readValue(inputStream, Prets.class);
 
-		prets.printAmo();
-		CalcTools.sumOfInterests(prets.getLoans());
+		// Calculate a first amortization with model data
+		prets.calcAmortization();
+		
+		// Run strategies that will complete the model
 		prets.runStrategies();
+		
+		// Calculate with the updated model
+		prets.calcAmortization();
+		
+		// Display results
 		prets.printAmo();
-		prets.printSeries();
-		CalcTools.sumOfInterests(prets.getLoans());
+		prets.printSerieEcheances();
+		CalcTools.summary(0, false, prets.getLoans());
 
+		if (prets.getReportAfter() > 0) {
+			CalcTools.summary(prets.getReportAfter(), false, prets.getLoans());
+		}
+
+		if (prets.isPtzFree()) {
+			CalcTools.summary(prets.getReportAfter(), true, prets.getLoans());
+		}
 	}
 
 }

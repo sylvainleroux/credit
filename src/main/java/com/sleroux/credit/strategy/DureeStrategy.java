@@ -6,7 +6,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sleroux.credit.model.Pret;
 
-public class Duree extends Strategy {
+public class DureeStrategy extends StrategyBase {
 
 	@JsonProperty
 	private int		nbMois;
@@ -39,17 +39,17 @@ public class Duree extends Strategy {
 		_pret.printEcheances();
 		_pret.printAssurances();
 
-		_pret.amortissement();
+		_pret.calcAmortization();
 		while (_pret.getDerniereMensualite().getCapitalRestantDu().compareTo(BigDecimal.ZERO) > 0) {
 			_pret.augmenteMensualiteDerniereSerie(BigDecimal.ONE);
-			_pret.amortissement();
+			_pret.calcAmortization();
 			System.out.print(".");
 		}
 		System.out.print("\n");
 		_pret.adjustConstantPayments();
 		_pret.printEcheances();
 
-		_pret.amortissement();
+		_pret.calcAmortization();
 
 	}
 

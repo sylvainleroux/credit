@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.sleroux.credit.strategy.Strategy;
+import com.sleroux.credit.strategy.StrategyBase;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Pret {
@@ -21,8 +21,9 @@ public class Pret {
 
 	private List<SerieEcheances>	seriesEcheances	= new ArrayList<>();
 	private List<Mensualite>		mensualites		= new ArrayList<>();
-	private List<Strategy>			strategies		= new ArrayList<>();
+	private List<StrategyBase>			strategyBases		= new ArrayList<>();
 	private List<Assurance>			assurances		= new ArrayList<>();
+	private List<Apport>			apports			= new ArrayList<>();
 
 	public Pret() {
 		// emtpy
@@ -37,7 +38,7 @@ public class Pret {
 	}
 
 	public void runStrategies(List<Pret> _prets) throws Exception {
-		for (Strategy s : strategies) {
+		for (StrategyBase s : strategyBases) {
 			// Get only already computed loans
 			List<Pret> previousLoans = new ArrayList<>();
 			for (Pret l : _prets) {
@@ -120,8 +121,7 @@ public class Pret {
 		}
 	}
 
-	public void creeNouvellesSerieEcheances(int _mensualiteCible, String _rate, String _insuranceRate, BigDecimal _principal,
-			List<Pret> _prets) {
+	public void creeNouvellesSerieEcheances(int _mensualiteCible, String _rate, String _insuranceRate, BigDecimal _principal, List<Pret> _prets) {
 
 		System.out.println("[" + nom + "] Création séries de paiement pour lissage");
 
@@ -167,7 +167,6 @@ public class Pret {
 		current.setFin(i);
 
 		addSerieEcheances(i + 1, i + 1, _rate, _mensualiteCible + "");
-		
 
 		// Create matching insurance
 		Assurance assurance = new Assurance();
@@ -179,7 +178,7 @@ public class Pret {
 
 	}
 
-	public void amortissement() throws Exception {
+	public void calcAmortization() throws Exception {
 
 		Calendar c = Calendar.getInstance();
 		if (debut != null) {
@@ -198,11 +197,11 @@ public class Pret {
 
 			SerieEcheances e = getEcheance(n);
 			Assurance a = getAssurance(n);
+			Apport apport = getApport(n);
 
 			// Calcul assurance
 			BigDecimal mensualiteAssurance = a.getMensualite();
-			BigDecimal tauxNominalProportionnel = e.getTaux().setScale(12, RoundingMode.HALF_UP)
-					.divide(new BigDecimal(12), RoundingMode.HALF_UP);
+			BigDecimal tauxNominalProportionnel = e.getTaux().setScale(12, RoundingMode.HALF_UP).divide(new BigDecimal(12), RoundingMode.HALF_UP);
 
 			BigDecimal capital = mensualites.get(n - 1).getCapitalRestantDu();
 
@@ -214,6 +213,13 @@ public class Pret {
 			pn.setCapitalRestantDu(capital.add(pn.getMontantInterets()).subtract(pn.getEcheance().subtract(mensualiteAssurance)));
 			pn.setCapitalAmorti(capital.subtract(pn.getCapitalRestantDu()));
 			pn.setDate(c.getTime());
+
+			if (apport != null) {
+				pn.setCapitalRestantDu(pn.getCapitalRestantDu().subtract(apport.getMontant()));
+				pn.setCapitalAmorti(pn.getCapitalAmorti().add(apport.getMontant()));
+				pn.setApport(apport.getMontant());
+			}
+
 			mensualites.add(pn);
 
 			c.add(Calendar.MONTH, 1);
@@ -221,6 +227,15 @@ public class Pret {
 
 		getMensualites(mensualites);
 
+	}
+
+	private Apport getApport(int _n) {
+		for (Apport a : apports) {
+			if (a.getTerme() == _n) {
+				return a;
+			}
+		}
+		return null;
 	}
 
 	private Assurance getAssurance(int _n) throws Exception {
@@ -252,7 +267,7 @@ public class Pret {
 			System.out.print("[" + nom + "] Ajuste le nombre de menusalités ");
 
 		while (true) {
-			amortissement();
+			calcAmortization();
 			Mensualite last = mensualites.get(mensualites.size() - 1);
 			if (_print)
 				System.out.print("+");
@@ -266,7 +281,7 @@ public class Pret {
 		}
 
 		while (true) {
-			amortissement();
+			calcAmortization();
 			Mensualite last = mensualites.get(mensualites.size() - 1);
 			if (_print)
 				System.out.print("-");
@@ -294,7 +309,7 @@ public class Pret {
 		System.out.print("[" + nom + "] Ajuste les menusualités pour avoir des menusalités égales (scale:" + _scale + ") ");
 		int count = 100;
 		while (true) {
-			amortissement();
+			calcAmortization();
 			Mensualite last = mensualites.get(mensualites.size() - 1);
 			// System.out.println(last.getCapitalRestantDu().intValue());
 			if (last.getCapitalRestantDu().intValue() > _threathold) {
@@ -404,12 +419,12 @@ public class Pret {
 		return mensualites;
 	}
 
-	public List<Strategy> getStrategies() {
-		return strategies;
+	public List<StrategyBase> getStrategies() {
+		return strategyBases;
 	}
 
-	public void setStrategies(List<Strategy> _strategies) {
-		strategies = _strategies;
+	public void setStrategies(List<StrategyBase> _strategyBases) {
+		strategyBases = _strategyBases;
 	}
 
 	public void setNom(String _name) {
@@ -419,4 +434,30 @@ public class Pret {
 	public String getNom() {
 		return nom;
 	}
+
+	public List<Apport> getApports() {
+		return apports;
+	}
+
+	public void setApports(List<Apport> _apports) {
+		apports = _apports;
+	}
+
+	public List<SerieEcheances> getSeriesEcheances() {
+		return seriesEcheances;
+	}
+
+	public void setSeriesEcheances(List<SerieEcheances> _seriesEcheances) {
+		seriesEcheances = _seriesEcheances;
+	}
+
+	public void setMensualites(List<Mensualite> _mensualites) {
+		mensualites = _mensualites;
+	}
+
+	public void setAssurances(List<Assurance> _assurances) {
+		assurances = _assurances;
+	}
+
+
 }

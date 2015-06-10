@@ -13,7 +13,7 @@ public class TestSplitStrategy {
 	public void testSplit() throws Exception {
 
 		Pret l = new Pret();
-		l.setNom("Test Split");
+		l.setNom("Test SplitStrategy");
 		l.setNominal(new BigDecimal(1000));
 		l.addSerieEcheances(1, 10, "0.2", "100");
 		
@@ -23,9 +23,9 @@ public class TestSplitStrategy {
 		l.printEcheances();
 		l.printAssurances();
 		
-		Split split = new Split();
-		split.setSplitAfter(5);
-		split.run(l, null);
+		SplitStrategy splitStrategy = new SplitStrategy();
+		splitStrategy.setSplitAfter(5);
+		splitStrategy.run(l, null);
 		
 		l.printEcheances();
 		l.printAssurances();
