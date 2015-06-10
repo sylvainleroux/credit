@@ -1,11 +1,12 @@
 {
   "prets": [
     {
-      "nom": "PRET1",
+      "nom": "PRET1", 
       "nominal": 2500,
       "debut": "2011-01-01",
       "echeances": [
-        {"debut":   1, "fin": 24, "montant": 10, "taux": 0.00 }
+        {"debut":   1,  "fin": 23, "montant": 104.80, "taux": 0.000 },
+        {"debut":   24, "fin": 24, "montant": 104.72, "taux": 0.000 }
       ],
       "assurances": [
         {"debut": 1, "fin": 24, "capital": 2500, "taux": 0.003 }
@@ -13,17 +14,18 @@
     },
     {
       "nom": "PRET2",
-      "nominal": 30000,
+      "nominal": 20000,
       "debut": "2011-01-01",
       "echeances": [
-        { "debut": 1, "fin": 120, "montant": 297.18, "taux": 0.03}
+        { "debut": 1, "fin": 49, "montant": 442.42, "taux": 0.04},
+        { "debut": 50,"fin": 50, "montant": 442.62, "taux": 0.04}
       ],
       "assurances": [
-        { "debut": 1, "fin": 120, "capital": 30000, "taux": 0.003 }
+        { "debut": 1, "fin": 50, "capital": 30000, "taux": 0.003 }
       ],
       "strategies":[
-     	 { "nom" : "split",  "split_after" : 20},
-      	{ "nom" : "length", "nb_mois" : 50, "taux": 0.017, "taux_assurance": 0.001}
+      	{ "nom" : "split", "split_after" : 16 },
+      	{ "nom" : "length", "nb_mois" : 44, "taux" : 0.02, "taux_assurance" : "0.003" }
       ]
     },
     {
@@ -31,15 +33,17 @@
       "nominal": 40000,
       "debut": "2011-01-01",
       "echeances": [
-        { "debut":   1, "fin":  168, "montant": 324, "taux": 0.04 }
-        
+        { "debut":   1, "fin":  24, "montant": 256.98, "taux": 0.04 },
+        { "debut":   25, "fin":  50, "montant": 363.78, "taux": 0.04 },
+        { "debut":   51, "fin":  91, "montant": 805.46, "taux": 0.04 },
+        { "debut":   92, "fin":  92, "montant": 813.75, "taux": 0.04 }
       ],
       "assurances": [
-        { "debut": 1, "fin": 168, "capital": 40000, "taux": 0.004 }
+        { "debut": 1, "fin": 92, "capital": 40000, "taux": 0.004 } 
       ],
       "strategies":[
-      	 { "nom" : "split",  "split_after" : 20},
-      	{ "nom" : "lissage-mensualite", "mensualite_cible" : 730, "taux" : 0.040, "taux_assurance" : "0.004"}
+      	{ "nom" : "split",  "split_after" : 16 },
+      	{ "nom" : "lissage-mensualite", "mensualite_cible" : 800, "taux" : 0.03, "taux_assurance" : "0.002"}
       ]
     }
   ]
