@@ -81,6 +81,31 @@ Strategies
 { "nom" : "length", "nb_mois" : 108, "taux" : 0.017, "taux_assurance" : "0.002" }
 ```
 
+
+Calcul de crédit
+----------------
+
+```
+{
+  "prets": [
+    {
+      "nom": "PRET1", 
+      "nominal": 2500,
+      "debut": "2011-01-01",
+      "strategies" : [ { "nom": "length", "nb_mois": 60, "taux": 0.0, "taux_assurance": "0.0026" }]
+    },
+    {
+      "nom": "PRET2",
+      "nominal": 200000,
+      "debut": "2011-01-01",
+      "strategies" : [  { "nom": "lissage-mensualite", "mensualite_cible": 1050, "taux": 0.0185, "taux_assurance": "0.002" }]
+    }
+  ]
+}
+```
+
+
+
 Renégociation de crédit 
 -----------------------
 

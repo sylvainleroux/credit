@@ -20,8 +20,13 @@ public class DureeStrategy extends StrategyBase {
 	@Override
 	public void run(Pret _pret, List<Pret> _previousLoans) throws Exception {
 
-		if (taux == null)
-			throw new Exception("le taux ne doit pas être nul");
+		if (taux == null){
+			throw new Exception("taux should not be null");
+		}
+		
+		if (tauxAssurance == null){
+			throw new Exception("tauxAssurance should not be null");
+		}
 
 		System.out.printf("[" + _pret.getNom() + "] Augmente la mensualité jusqu'à obtenir la durée choisie");
 

@@ -27,7 +27,7 @@ public class SplitStrategy extends StrategyBase {
 			}
 		}
 		// SplitStrategy assurances
-		_pret.getAssurances().get(0).setFin(splitAfter);
+		//_pret.getAssurances().get(0).setFin(splitAfter);
 
 	}
 

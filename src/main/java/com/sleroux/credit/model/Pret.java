@@ -21,7 +21,7 @@ public class Pret {
 
 	private List<SerieEcheances>	seriesEcheances	= new ArrayList<>();
 	private List<Mensualite>		mensualites		= new ArrayList<>();
-	private List<StrategyBase>			strategyBases		= new ArrayList<>();
+	private List<StrategyBase>		strategyBases	= new ArrayList<>();
 	private List<Assurance>			assurances		= new ArrayList<>();
 	private List<Apport>			apports			= new ArrayList<>();
 
@@ -240,13 +240,17 @@ public class Pret {
 
 	private Assurance getAssurance(int _n) throws Exception {
 		// System.out.println("--- " + _n);
+		Assurance lastFound = null;
 		for (Assurance a : assurances) {
 			// System.out.println(a.debut +" " + a.fin);
-			if (a.getDebut() <= _n && a.getFin() >= _n) {
-				return a;
+			if (a.getDebut() <= _n) {
+				lastFound = a;
 			}
 		}
 
+		if (lastFound != null) {
+			return lastFound;
+		}
 		throw new Exception("Assurance not found for period [" + _n + "]");
 	}
 
@@ -297,12 +301,10 @@ public class Pret {
 	}
 
 	public void adjustConstantPayments() throws Exception {
-
 		adjustAmmout(50, new BigDecimal("1"));
 		adjustAmmout(5, new BigDecimal("0.1"));
 		adjustAmmout(0, new BigDecimal("0.01"));
 		adjustLastPeriode(getCapitalRestantDu());
-
 	}
 
 	private void adjustAmmout(int _threathold, BigDecimal _scale) throws Exception {
@@ -458,6 +460,5 @@ public class Pret {
 	public void setAssurances(List<Assurance> _assurances) {
 		assurances = _assurances;
 	}
-
 
 }

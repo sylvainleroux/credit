@@ -30,25 +30,39 @@ public class Run {
 
 		// Calculate a first amortization with model data
 		prets.calcAmortization();
-		
+
 		// Run strategies that will complete the model
 		prets.runStrategies();
-		
+
 		// Calculate with the updated model
 		prets.calcAmortization();
-		
+
 		// Display results
 		prets.printAmo();
 		prets.printSerieEcheances();
 		CalcTools.summary(0, false, prets.getLoans());
 
+		// Display summary, considering only remaining payments
+		// Help to compare costs for :
+		// - a running loan that would be re-negotiated, have rates changed at a specified time
+		// - a new loans that would be contracted in another bank, starting at the same specified time
 		if (prets.getReportAfter() > 0) {
 			CalcTools.summary(prets.getReportAfter(), false, prets.getLoans());
 		}
 
+		// Display summary, excluding any loan containing "PTZ" in the name 
+		// Helps to compare costs for :
+		// - a running loan, that contain a "PTZ"
+		// - a new loan, contracted in a new bank, but considering the payment of the PTZ loan.
 		if (prets.isPtzFree()) {
 			CalcTools.summary(prets.getReportAfter(), true, prets.getLoans());
 		}
+
+		// Debug
+		// mapper.enable(SerializationFeature.INDENT_OUTPUT);
+		// mapper.enable(SerializationFeature.CLOSE_CLOSEABLE);
+		// System.out.println(mapper.writeValueAsString(prets));
+
 	}
 
 }
